@@ -95,6 +95,11 @@ syn match   pythonFunction
       \ "\%(\%(def\s\|class\s\|@\)\s*\)\@<=\h\%(\w\|\.\)*" contained
 
 syn match   pythonComment	"#.*$" contains=pythonTodo,@Spell
+" File header
+if !exists("python_no_file_header")
+  syn match   pythonRun		"\%^#!.*$"
+  syn match   pythonCoding	"\%^.*\%(\n.*\)\?#.*coding[:=]\s*[0-9A-Za-z-_.]\+.*$"
+endif
 syn keyword pythonTodo		FIXME NOTE NOTES TODO XXX contained
 
 " Triple-quoted strings can contain doctests.
@@ -140,6 +145,9 @@ if exists("python_highlight_all")
   endif
   if exists("python_no_string_template_highlight")
     unlet python_no_string_template_highlight
+  endif
+  if exists("python_no_file_header")
+    unlet python_no_file_header
   endif
   let python_space_error_highlight = 1
 endif
@@ -256,7 +264,6 @@ if !exists("python_no_string_template_highlight")
   syn match pythonStrTemplate	"\$[a-zA-Z_][a-zA-Z0-9_]*" contained containedin=pythonString,pythonRawString
 endif
 
-
 " Do not spell doctests inside strings.
 " Notice that the end of a string, either ''', or """, will end the contained
 " doctest too.  Thus, we do *not* need to have it as an end pattern.
@@ -321,6 +328,10 @@ if version >= 508 || !exists("did_python_syn_inits")
   endif
   if !exists("python_no_string_template_highlight")
     HiLink pythonStrTemplate      Special
+  endif
+  if !exists("python_no_file_header")
+    HiLink pythonCoding           Special
+    HiLink pythonRun              Special
   endif
 
   delcommand HiLink
