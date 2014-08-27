@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language:	Python
-" Maintainer:	Neil Schemenauer <nas@python.ca>
-" Last Change:	2013 Feb 26
+" Maintainer:	Cong Ma <cma@pmo.ac.cn>
+" Last Change:	2014 Aug 27
 " Credits:	Zvezdan Petkovic <zpetkovic@acm.org>
 "		Neil Schemenauer <nas@python.ca>
 "		Dmitry Vasiliev
@@ -10,6 +10,7 @@
 "
 "		- introduced highlighting of doctests
 "		- updated keywords, built-ins, and exceptions
+"		- highlighted string formatting/templating directives
 "		- corrected regular expressions for
 "
 "		  * functions
@@ -30,6 +31,8 @@
 "   let python_no_doctest_highlight = 1
 "   let python_no_exception_highlight = 1
 "   let python_no_number_highlight = 1
+"   let python_no_string_format_highlight = 1
+"   let python_no_string_template_highlight = 1
 "   let python_space_error_highlight = 1
 "
 " All the options above can be switched on together.
@@ -132,6 +135,12 @@ if exists("python_highlight_all")
   if exists("python_no_number_highlight")
     unlet python_no_number_highlight
   endif
+  if exists("python_no_string_format_highlight")
+    unlet python_no_string_format_highlight
+  endif
+  if exists("python_no_string_template_highlight")
+    unlet python_no_string_template_highlight
+  endif
   let python_space_error_highlight = 1
 endif
 
@@ -232,6 +241,22 @@ if exists("python_space_error_highlight")
   syn match   pythonSpaceError	display "\t\+ "
 endif
 
+" String format
+if !exists("python_no_string_format_highlight")
+  syn match pythonStrFormatting	"%\%(([^)]\+)\)\=[-#0 +]*\d*\%(\.\d\+\)\=[hlL]\=[diouxXeEfFgGcrs%]" contained containedin=pythonString,pythonRawString
+  syn match pythonStrFormatting	"%[-#0 +]*\%(\*\|\d\+\)\=\%(\.\%(\*\|\d\+\)\)\=[hlL]\=[diouxXeEfFgGcrs%]" contained containedin=pythonString,pythonRawString
+  syn match pythonStrFormatting "{{\|}}" contained containedin=pythonString,pythonRawString
+  syn match pythonStrFormatting	"{\%(\%([^[:cntrl:][:space:][:punct:][:digit:]]\|_\)\%([^[:cntrl:][:punct:][:space:]]\|_\)*\|\d\+\)\=\%(\.\%([^[:cntrl:][:space:][:punct:][:digit:]]\|_\)\%([^[:cntrl:][:punct:][:space:]]\|_\)*\|\[\%(\d\+\|[^!:\}]\+\)\]\)*\%(![rsa]\)\=\%(:\%({\%(\%([^[:cntrl:][:space:][:punct:][:digit:]]\|_\)\%([^[:cntrl:][:punct:][:space:]]\|_\)*\|\d\+\)}\|\%([^}]\=[<>=^]\)\=[ +-]\=#\=0\=\d*,\=\%(\.\d\+\)\=[bcdeEfFgGnosxX%]\=\)\=\)\=}" contained containedin=pythonString,pythonRawString
+endif
+
+" String templating
+if !exists("python_no_string_template_highlight")
+  syn match pythonStrTemplate	"\$\$" contained containedin=pythonString,pythonRawString
+  syn match pythonStrTemplate	"\${[a-zA-Z_][a-zA-Z0-9_]*}" contained containedin=pythonString,pythonRawString
+  syn match pythonStrTemplate	"\$[a-zA-Z_][a-zA-Z0-9_]*" contained containedin=pythonString,pythonRawString
+endif
+
+
 " Do not spell doctests inside strings.
 " Notice that the end of a string, either ''', or """, will end the contained
 " doctest too.  Thus, we do *not* need to have it as an end pattern.
@@ -290,6 +315,12 @@ if version >= 508 || !exists("did_python_syn_inits")
   if !exists("python_no_doctest_highlight")
     HiLink pythonDoctest	Special
     HiLink pythonDoctestValue	Define
+  endif
+  if !exists("python_no_string_format_highlight")
+    HiLink pythonStrFormatting    Special
+  endif
+  if !exists("python_no_string_template_highlight")
+    HiLink pythonStrTemplate      Special
   endif
 
   delcommand HiLink
