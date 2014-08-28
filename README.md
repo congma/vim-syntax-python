@@ -4,15 +4,16 @@ Python syntax highlighting script for Vim
 About
 -----
 
-This is a fork of Vim 7.4's Python syntax file maintained by Neil Schemenauer.
-The original contributors include Dmitry Vasiliev, Neil Schemenauer and Zvezdan
-Petkovic.  Some useful features from Dmitry Vasiliev's `syntax/python.vim` are
-added back, while enhancements are added and bugs are fixed whenever found.
+This is a fork of Vim 7.4's Python syntax file originally maintained by Neil
+Schemenauer.  The original contributors include Dmitry Vasiliev, Neil
+Schemenauer and Zvezdan Petkovic.  Some useful features from Dmitry Vasiliev's
+`syntax/python.vim` are added back, while enhancements are added and bugs are
+fixed whenever found.
 
 Features
 --------
 
-* Added back highlighting for magic comments: source code encoding and #!
+* Added back highlighting for magic comments: source code encoding and `#!`
   (executable) strings.
 * Added back optional highlighting for `%`-formatting inside strings.
 
