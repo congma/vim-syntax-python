@@ -75,8 +75,9 @@ set cpo&vim
 "   built-in below (use 'from __future__ import print_function' in 2.6)
 "
 syn keyword pythonStatement	False, None, True
-syn keyword pythonStatement	as assert break continue del exec global
-syn keyword pythonStatement	lambda nonlocal pass print return with yield
+syn keyword pythonStatement	as assert break continue del global
+syn keyword pythonStatement	lambda nonlocal pass return with yield
+syn keyword pythonStatement	exec print contained containedin=pythonBtInIsolator
 syn keyword pythonStatement	class def nextgroup=pythonFunction skipwhite
 syn keyword pythonConditional	elif else if
 syn keyword pythonRepeat	for while
@@ -187,29 +188,30 @@ endif
 " http://docs.python.org/library/functions.html#non-essential-built-in-functions
 " Python built-in functions are in alphabetical order.
 if !exists("python_no_builtin_highlight")
+  syn match pythonBtInIsolator	"\(\.\)\@<!\<\k\+\>" contains=pythonBuiltin,pythonStatement
   " built-in constants
   " 'False', 'True', and 'None' are also reserved words in Python 3.0
-  syn keyword pythonBuiltin	False True None
-  syn keyword pythonBuiltin	NotImplemented Ellipsis __debug__
+  syn keyword pythonBuiltin	False True None contained containedin=pythonBtInIsolator
+  syn keyword pythonBuiltin	NotImplemented Ellipsis __debug__ contained containedin=pythonBtInIsolator 
   " built-in functions
-  syn keyword pythonBuiltin	abs all any bin bool chr classmethod
-  syn keyword pythonBuiltin	compile complex delattr dict dir divmod
-  syn keyword pythonBuiltin	enumerate eval filter float format
-  syn keyword pythonBuiltin	frozenset getattr globals hasattr hash
-  syn keyword pythonBuiltin	help hex id input int isinstance
-  syn keyword pythonBuiltin	issubclass iter len list locals map max
-  syn keyword pythonBuiltin	min next object oct open ord pow print
-  syn keyword pythonBuiltin	property range repr reversed round set
-  syn keyword pythonBuiltin	setattr slice sorted staticmethod str
-  syn keyword pythonBuiltin	sum super tuple type vars zip __import__
+  syn keyword pythonBuiltin	abs all any bin bool chr classmethod contained containedin=pythonBtInIsolator
+  syn keyword pythonBuiltin	compile complex delattr dict dir divmod contained containedin=pythonBtInIsolator
+  syn keyword pythonBuiltin	enumerate eval filter float format contained containedin=pythonBtInIsolator
+  syn keyword pythonBuiltin	frozenset getattr globals hasattr hash contained containedin=pythonBtInIsolator
+  syn keyword pythonBuiltin	help hex id input int isinstance contained containedin=pythonBtInIsolator
+  syn keyword pythonBuiltin	issubclass iter len list locals map max contained containedin=pythonBtInIsolator
+  syn keyword pythonBuiltin	min next object oct open ord pow print contained containedin=pythonBtInIsolator
+  syn keyword pythonBuiltin	property range repr reversed round set contained containedin=pythonBtInIsolator
+  syn keyword pythonBuiltin	setattr slice sorted staticmethod str contained containedin=pythonBtInIsolator
+  syn keyword pythonBuiltin	sum super tuple type vars zip __import__ contained containedin=pythonBtInIsolator
   " Python 2.6 only
-  syn keyword pythonBuiltin	basestring callable cmp execfile file
-  syn keyword pythonBuiltin	long raw_input reduce reload unichr
-  syn keyword pythonBuiltin	unicode xrange
+  syn keyword pythonBuiltin	basestring callable cmp execfile file contained containedin=pythonBtInIsolator
+  syn keyword pythonBuiltin	long raw_input reduce reload unichr contained containedin=pythonBtInIsolator
+  syn keyword pythonBuiltin	unicode xrange contained containedin=pythonBtInIsolator
   " Python 3.0 only
-  syn keyword pythonBuiltin	ascii bytearray bytes exec memoryview
+  syn keyword pythonBuiltin	ascii bytearray bytes exec memoryview contained containedin=pythonBtInIsolator
   " non-essential built-in functions; Python 2.6 only
-  syn keyword pythonBuiltin	apply buffer coerce intern
+  syn keyword pythonBuiltin	apply buffer coerce intern contained containedin=pythonBtInIsolator
 endif
 
 " From the 'Python Library Reference' class hierarchy at the bottom.
