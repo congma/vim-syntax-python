@@ -74,7 +74,8 @@ set cpo&vim
 " - 'print' is a built-in in Python 3.0 and will be highlighted as
 "   built-in below (use 'from __future__ import print_function' in 2.6)
 "
-syn keyword pythonStatement	False, None, True
+syn keyword pythonStatement	False, None, True contained containedin=pythonBtInIsolator
+
 syn keyword pythonStatement	as assert break continue del global
 syn keyword pythonStatement	lambda nonlocal pass return with yield
 syn keyword pythonStatement	exec print contained containedin=pythonBtInIsolator
