@@ -314,7 +314,7 @@ if version >= 508 || !exists("did_python_syn_inits")
     HiLink pythonNumber		Number
   endif
   if !exists("python_no_builtin_highlight")
-    HiLink pythonBuiltin	Function
+    HiLink pythonBuiltin	Constant
   endif
   if !exists("python_no_exception_highlight")
     HiLink pythonExceptions	Structure
