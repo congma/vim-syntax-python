@@ -189,7 +189,7 @@ endif
 " http://docs.python.org/library/functions.html#non-essential-built-in-functions
 " Python built-in functions are in alphabetical order.
 if !exists("python_no_builtin_highlight")
-  syn match pythonBtInIsolator	"\(\.\)\@<!\<\K\+\>" contains=pythonBuiltin,pythonStatement
+  syn match pythonBtInIsolator	+\(\.\)\@<!\<\K\+\>\(['"]\)\@!+ contains=pythonBuiltin,pythonStatement
   " built-in constants
   " 'False', 'True', and 'None' are also reserved words in Python 3.0
   syn keyword pythonBuiltin	False True None contained containedin=pythonBtInIsolator
