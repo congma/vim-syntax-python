@@ -74,9 +74,8 @@ set cpo&vim
 " - 'print' is a built-in in Python 3.0 and will be highlighted as
 "   built-in below (use 'from __future__ import print_function' in 2.6)
 "
-syn keyword pythonStatement	as assert break continue del global
+syn keyword pythonStatement	as async await assert break continue del global
 syn keyword pythonStatement	lambda nonlocal pass return with yield
-syn keyword pythonStatement	exec print contained containedin=pythonBtInIsolator
 syn keyword pythonStatement	class def nextgroup=pythonFunction skipwhite
 syn keyword pythonConditional	elif else if
 syn keyword pythonRepeat	for while
@@ -104,17 +103,32 @@ syn keyword pythonTodo		FIXME NOTE NOTES TODO XXX contained
 
 " Triple-quoted strings can contain doctests.
 syn region  pythonString
-      \ start=+[uU]\=\z(['"]\)+ end="\z1" skip="\\\\\|\\\z1"
+      \ start=+\%(f\|F\|u\|U\)\=\z(['"]\)+ end="\z1" skip="\\\\\|\\\z1"
       \ contains=pythonEscape,@Spell
 syn region  pythonString
-      \ start=+[uU]\=\z('''\|"""\)+ end="\z1" keepend
+      \ start=+\%(f\|F\|u\|U\)\=\z('''\|"""\)+ end="\z1" keepend
       \ contains=pythonEscape,pythonSpaceError,pythonDoctest,@Spell
 syn region  pythonRawString
-      \ start=+[uU]\=[rR]\z(['"]\)+ end="\z1" skip="\\\\\|\\\z1"
+      \ start=+\%([rR]\|[rR][fF]\|[fF][rR]\)\z(['"]\)+ end="\z1" skip="\\\\\|\\\z1"
       \ contains=@Spell
 syn region  pythonRawString
-      \ start=+[uU]\=[rR]\z('''\|"""\)+ end="\z1" keepend
+      \ start=+\%([rR]\|[rR][fF]\|[fF][rR]\)\z('''\|"""\)+ end="\z1" keepend
       \ contains=pythonSpaceError,pythonDoctest,@Spell
+
+" bytes literal
+syn region  pythonBytes
+      \ start=+[bB]\z(['"]\)+ end="\z1" skip="\\\\\|\\\z1"
+      \ contains=pythonEscape
+syn region  pythonBytes
+      \ start=+[bB]\z('''\|"""\)+ end="\z1" keepend
+      \ contains=pythonEscape,pythonSpaceError
+syn region  pythonRawBytes
+      \ start=+\%([rR][bB]\|[bB][rR]\)\z(['"]\)+ end="\z1" skip="\\\\\|\\\z1"
+      \ contains=pythonNonAsciiError
+syn region  pythonRawBytes
+      \ start=+\%([rR][bB]\|[bB][rR]\)\z('''\|"""\)+ end="\z1" keepend
+      \ contains=pythonSpaceError,pythonNonAsciiError
+syn match   pythonNonAsciiError	display "[^\x00-\x7f]" contained containedin=pythonRawBytes
 
 syn match   pythonEscape	+\\[abfnrtv'"\\]+ contained display
 syn match   pythonEscape	"\\\o\{1,3}" contained display
@@ -187,10 +201,8 @@ endif
 " http://docs.python.org/library/functions.html#non-essential-built-in-functions
 " Python built-in functions are in alphabetical order.
 if !exists("python_no_builtin_highlight")
-  syn match pythonBtInIsolator	+\(\.\)\@<!\<\K\+\>\(['"]\)\@!+
-	\ contains=pythonBuiltin,pythonStatement
+  syn match pythonBtInIsolator	display transparent keepend +\%(\.\)\@1<!\<\K\+\>\%(['"]\)\@1<!+
   " built-in constants
-  " 'False', 'True', and 'None' are also reserved words in Python 3.0
   syn keyword pythonBuiltin	False True None contained containedin=pythonBtInIsolator
   syn keyword pythonBuiltin	NotImplemented Ellipsis __debug__ contained containedin=pythonBtInIsolator 
   " built-in functions
@@ -210,27 +222,38 @@ endif
 " http://docs.python.org/library/exceptions.html
 if !exists("python_no_exception_highlight")
   " builtin base exceptions (only used as base classes for other exceptions)
-  syn keyword pythonExceptions	BaseException Exception
-  syn keyword pythonExceptions	ArithmeticError EnvironmentError
-  syn keyword pythonExceptions	LookupError
-  " builtin base exception removed in Python 3.0
-  syn keyword pythonExceptions	StandardError
+  syn keyword pythonBuiltIn	BaseException Exception contained containedin=pythonBtInIsolator
+  syn keyword pythonBuiltIn	ArithmeticError BufferError contained containedin=pythonBtInIsolator
+  syn keyword pythonBuiltIn	LookupError contained containedin=pythonBtInIsolator
   " builtin exceptions (actually raised)
-  syn keyword pythonExceptions	AssertionError AttributeError BufferError
+  syn keyword pythonExceptions	AssertionError AttributeError
   syn keyword pythonExceptions	EOFError FloatingPointError GeneratorExit
-  syn keyword pythonExceptions	IOError ImportError IndentationError
+  syn keyword pythonExceptions	ImportError ModuleNotFoundError
   syn keyword pythonExceptions	IndexError KeyError KeyboardInterrupt
   syn keyword pythonExceptions	MemoryError NameError NotImplementedError
-  syn keyword pythonExceptions	OSError OverflowError ReferenceError
-  syn keyword pythonExceptions	RuntimeError StopIteration SyntaxError
-  syn keyword pythonExceptions	SystemError SystemExit TabError TypeError
+  syn keyword pythonExceptions	OSError OverflowError RecursionError
+  syn keyword pythonExceptions	ReferenceError
+  syn keyword pythonExceptions	RuntimeError StopIteration StopAsyncIteration
+  syn keyword pythonExceptions	SyntaxError IndentationError TabError
+  syn keyword pythonExceptions	SystemError SystemExit TypeError
   syn keyword pythonExceptions	UnboundLocalError UnicodeError
   syn keyword pythonExceptions	UnicodeDecodeError UnicodeEncodeError
-  syn keyword pythonExceptions	UnicodeTranslateError ValueError VMSError
-  syn keyword pythonExceptions	WindowsError ZeroDivisionError
+  syn keyword pythonExceptions	UnicodeTranslateError ValueError
+  syn keyword pythonExceptions	ZeroDivisionError
+  " aliased exceptions
+  syn keyword pythonExceptions	EnvironmentError IOError WindowsError
+  " OS exceptions
+  syn keyword pythonExceptions	BlockingIOError ChildProcessError
+  syn keyword pythonExceptions	ConnectionError BrokenPipeError
+  syn keyword pythonExceptions	ConnectionAbortedError ConnectionRefusedError
+  syn keyword pythonExceptions	ConnectionResetError FileExistsError
+  syn keyword pythonExceptions	FileNotFoundError InterruptedError
+  syn keyword pythonExceptions	IsADirectoryError NotADirectoryError
+  syn keyword pythonExceptions	PermissionError ProcessLookupError TimeoutError
   " builtin warnings
   syn keyword pythonExceptions	BytesWarning DeprecationWarning FutureWarning
   syn keyword pythonExceptions	ImportWarning PendingDeprecationWarning
+  syn keyword pythonExceptions	ResouceWarning
   syn keyword pythonExceptions	RuntimeWarning SyntaxWarning UnicodeWarning
   syn keyword pythonExceptions	UserWarning Warning
 endif
@@ -300,7 +323,10 @@ if version >= 508 || !exists("did_python_syn_inits")
   HiLink pythonTodo		Todo
   HiLink pythonString		String
   HiLink pythonRawString	String
+  HiLink pythonBytes		String
+  HiLink pythonRawBytes		String
   HiLink pythonEscape		Special
+  HiLink pythonNonAsciiError	Error
   if !exists("python_no_number_highlight")
     HiLink pythonNumber		Number
   endif

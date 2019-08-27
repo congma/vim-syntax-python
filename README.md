@@ -10,12 +10,17 @@ Schemenauer and Zvezdan Petkovic.  Some useful features from Dmitry Vasiliev's
 `syntax/python.vim` are added back, while enhancements are added and bugs are
 fixed whenever found.
 
+The syntax file has been cleaned-up for Python 3.x. Syntaxes and highlights
+specific to Python 2 have been removed.
+
 Features
 --------
 
 * Added back highlighting for magic comments: source code encoding and `#!`
   (executable) strings.
 * Added back optional highlighting for `%`-formatting inside strings.
+* Non-ASCII characters are highlighted as error in raw-bytes literals
+  (e.g. in `rb"..."`).
 
 Bugfixes
 --------
