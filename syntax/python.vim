@@ -100,18 +100,18 @@ syn region  pythonRawString
 
 " bytes literal
 syn region  pythonBytes
-      \ start=+[bB]\z(['"]\)+ end="\z1" skip="\\\\\|\\\z1"
-      \ contains=pythonEscape
+      \ start=+[bB]\z(['"]\)+ end="\z1" skip="\\\\\|\\\z1" extend
+      \ contains=pythonEscape,pythonNonAsciiError
 syn region  pythonBytes
-      \ start=+[bB]\z('''\|"""\)+ end="\z1" keepend
-      \ contains=pythonEscape,pythonSpaceError
-syn region  pythonRawBytes
+      \ start=+[bB]\z('''\|"""\)+ end="\z1" keepend extend
+      \ contains=pythonEscape,pythonSpaceError,pythonNonAsciiError
+syn region  pythonRawBytes extend
       \ start=+\%([rR][bB]\|[bB][rR]\)\z(['"]\)+ end="\z1" skip="\\\\\|\\\z1"
       \ contains=pythonNonAsciiError
-syn region  pythonRawBytes
+syn region  pythonRawBytes extend
       \ start=+\%([rR][bB]\|[bB][rR]\)\z('''\|"""\)+ end="\z1" keepend
       \ contains=pythonSpaceError,pythonNonAsciiError
-syn match   pythonNonAsciiError	display "[^\x00-\x7f]" contained containedin=pythonRawBytes
+syn match   pythonNonAsciiError	display "[^\x00-\x7f]" contained containedin=pythonBytes,pythonRawBytes
 
 syn match   pythonEscape	+\\[abfnrtv'"\\]+ contained display
 syn match   pythonEscape	"\\\o\{1,3}" contained display
